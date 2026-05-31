@@ -1,169 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Shopping Cart</title>
-    
-    <style>
-        /* 1. GLOBAL STYLES */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6; /* Light gray-blue background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        /* 2. THE APP CONTAINER (CARD) */
-        .cart-container {
-            background-color: white;
-            width: 380px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            text-align: center;
-        }
-
-        h1 {
-            color: #2c3e50;
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 24px;
-        }
-
-        /* 3. INPUT AND BUTTON ROW */
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        input {
-            flex: 1; /* Takes up remaining space */
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            border-color: #007bff; /* Blue border when clicking inside */
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-        }
-
-        button:active {
-            transform: scale(0.95); /* Slight click effect */
-        }
-
-        /* 4. CART STATS & LIST */
-        .stats {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        #cartDisplay {
-            list-style: none; /* Removes default bullet points */
-            padding: 0;
-            margin: 0;
-        }
-
-        .cart-item {
-            background-color: #f8f9fa;
-            border-left: 4px solid #007bff; /* Blue accent line */
-            margin-bottom: 10px;
-            padding: 12px 15px;
-            border-radius: 6px;
-            text-align: left;
-            font-weight: 500;
-            color: #333;
-            display: flex;
-            align-items: center;
-            animation: slideIn 0.3s ease; /* Smooth animation when item appears */
-        }
-
-        .emoji {
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        /* Small animation for new items */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="cart-container">
+<html>
+    <body style="text-align:center; margin-top:100px;">
+        
         <h1>🛒 Shopping Cart</h1>
+
+        <input type="text" id="foodName" placeholder="Please Enter a Food Item">
         
-        <div class="input-group">
-            <input type="text" id="foodName" placeholder="Enter a food item...">
-            <button onclick="foodItems()">Add</button>
-        </div>
-
-        <div class="stats" id="counterDisplay">Total Items: 0</div>
+        <button onclick="foodItems()">Add Food</button>
+        <button onclick="emptyCart()" style="color: red;">Empty Cart</button>
         
-        <ul id="cartDisplay"></ul>
-    </div>
-
-    <script>
-        // 1. Memory Bank
-        let food = [];
-
-        function foodItems() {
-            // 2. Grab the input & trim accidental spaces
-            let newFood = document.getElementById("foodName").value.trim();
-
-            // 3. Guard Clause: Don't add empty items
-            if (newFood === "") {
-                alert("Please enter a food item first!");
-                return; // Stops the function immediately
+        <p id="counterDisplay"></p>
+        <p id="message"></p>
+        
+        <script>
+            // 1. Hamara Godaam (Array)
+            let food = ["Rice", "Daal"];
+            
+            // 2. Naya Item Add karne ka function
+            function foodItems() {
+                let newFood = document.getElementById("foodName").value;
+                document.getElementById("foodName").value = "";
+                
+                // Agar input khali nahi hai, tabhi godaam mein daalo
+                if (newFood) { 
+                    food.push(newFood); 
+                }
+                
+                // Total Count Update (if-block ke bahar, taaki hamesha chale)
+                document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
+                
+                // Loop chalakar list sajana
+                let text = "";
+                for (let i = 0; i < food.length; i++) {
+                    text = text + food[i] + " ";
+                }
+                
+                // Saji hui list screen par dikhana
+                document.getElementById("message").innerText = text;
             }
 
-            // 4. Clear input box immediately
-            document.getElementById("foodName").value = "";
-
-            // 5. Add to memory
-            food.push(newFood);
-
-            // 6. Update the counter text
-            document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;
-
-            // 7. Loop to build the HTML list
-            let htmlList = "";
-            for (let i = 0; i < food.length; i++) {
-                // Instead of just joining words, we are writing HTML <li> tags inside the loop!
-                htmlList = htmlList + "<li class='cart-item'><span class='emoji'>✅</span>" + food[i] + "</li>";
+            // 3. Godaam Khali karne ka function (Danger Zone!)
+            function emptyCart() {
+                food = []; // Godaam ko khali dabba bana diya
+                document.getElementById("message").innerText = ""; // Screen se list mita di
+                document.getElementById("counterDisplay").innerText = "Total Items: 0"; // Counter ko zero kar diya
             }
-
-            // 8. Inject the built HTML string into the ul container
-            document.getElementById("cartDisplay").innerHTML = htmlList;
-        }
-    </script>
-
-</body>
+            
+        </script>
+    </body>
 </html>
