@@ -12,16 +12,58 @@
         <p id="billDisplay">Your Bill: $0</p>
         <p id="message" style="font-size: 20px; font-weight: bold;"></p>
         
-        <hr> <h2>🔍 Search in Godown</h2>
+        <hr>
+
+        <h2>🔍 Search in Godown</h2>
         <input type="text" id="searchBox" placeholder="Search Item...">
         <button onclick="searchItem()">Search</button>
         <p id="searchResult"></p>
+        
+        <hr>
+
+        <h2>🛒 Fresh Fruits Available</h2>
+        
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/128/415/415733.png" width="40" style="vertical-align: middle;"> 
+            <b>Apple</b> 
+            <button onclick="buyFruit('Apple')" style="background-color: lightblue;">Add to Cart</button>
+        </p>
+        
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/128/2909/2909761.png" width="40" style="vertical-align: middle;"> 
+            <b>Banana</b> 
+            <button onclick="buyFruit('Banana')" style="background-color: lightblue;">Add to Cart</button>
+        </p>
+        
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/128/6866/6866538.png" width="40" style="vertical-align: middle;"> 
+            <b>Mango</b> 
+            <button onclick="buyFruit('Mango')" style="background-color: lightblue;">Add to Cart</button>
+        </p>
+
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/128/5968/5968250.png" width="40" style="vertical-align: middle;"> 
+            <b>Grapes</b> 
+            <button onclick="buyFruit('Grapes')" style="background-color: lightblue;">Add to Cart</button>
+        </p>
+
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/128/5968/5968350.png" width="40" style="vertical-align: middle;"> 
+            <b>Strawberry</b> 
+            <button onclick="buyFruit('Strawberry')" style="background-color: lightblue;">Add to Cart</button>
+        </p>
+
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/128/1135/1135549.png" width="40" style="vertical-align: middle;"> 
+            <b>Watermelon</b> 
+            <button onclick="buyFruit('Watermelon')" style="background-color: lightblue;">Add to Cart</button>
+        </p>
         
         <script>
             // 1. Hamara Godaam ab bilkul khali hai!
             let food = [];
             
-            // FUNCTION 1: Naya item add karna
+            // FUNCTION 1: Naya item add karna (Type karke)
             function foodItems() {
                 let newFood = document.getElementById("foodName").value;
                 document.getElementById("foodName").value = "";
@@ -30,34 +72,13 @@
                     food.push(newFood); 
                 }
                 
-                // Counter aur Bill Update (Har item $5 ka hai)
-                document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
-                let billAmount = food.length * 5;
-                document.getElementById("billDisplay").innerText = "Your Bill: $" + billAmount;
-                
-                // Loop chalakar list sajana
-                let text = "";
-                for (let i = 0; i < food.length; i++) {
-                    text = text + food[i] + " ";
-                }
-                document.getElementById("message").innerText = text;
+                updateCartUI(); // UI update karne ka common kaam
             }
 
             // FUNCTION 2: Aakhiri item hatana (Undo)
             function undoItem() {
                 food.pop(); // Godaam se aakhiri item nikal do
-                
-                // Item hatne ke baad Counter aur Bill wapas update karo
-                document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
-                let billAmount = food.length * 5;
-                document.getElementById("billDisplay").innerText = "Your Bill: $" + billAmount;
-                
-                // List ko wapas naye tareeqe se sajakar dikhao
-                let text = "";
-                for (let i = 0; i < food.length; i++) {
-                    text = text + food[i] + " ";
-                }
-                document.getElementById("message").innerText = text;
+                updateCartUI();
             }
 
             // FUNCTION 3: Godaam Khali karna
@@ -66,19 +87,37 @@
                 document.getElementById("message").innerText = ""; 
                 document.getElementById("counterDisplay").innerText = "Total Items: 0"; 
                 document.getElementById("billDisplay").innerText = "Your Bill: $0"; 
-                document.getElementById("searchResult").innerText = ""; // Search result bhi mita do
+                document.getElementById("searchResult").innerText = ""; 
             }
 
             // FUNCTION 4: Godaam mein item dhundna
             function searchItem() {
                 let word = document.getElementById("searchBox").value;
                 
-                // Agar word mila, toh Haan bolo, nahi toh Naa.
                 if (food.includes(word)) {
                     document.getElementById("searchResult").innerText = "Haan! " + word + " godaam mein hai! ✅";
                 } else {
                     document.getElementById("searchResult").innerText = "Nahi! " + word + " nahi mila. ❌";
                 }
+            }
+
+            // FUNCTION 5: Direct Button se fruit add karna (Arguments ka jadoo)
+            function buyFruit(fruitName) {
+                food.push(fruitName); // Jo fruit name pass hua hai, usko godaam mein daalo
+                updateCartUI(); // UI update karo
+            }
+
+            // HELPER FUNCTION: Bar-bar likhne se bachne ke liye UI update ka ek function
+            function updateCartUI() {
+                document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
+                let billAmount = food.length * 5;
+                document.getElementById("billDisplay").innerText = "Your Bill: $" + billAmount;
+                
+                let text = "";
+                for (let i = 0; i < food.length; i++) {
+                    text = text + food[i] + " ";
+                }
+                document.getElementById("message").innerText = text;
             }
             
         </script>
