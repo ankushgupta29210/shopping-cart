@@ -1,6 +1,10 @@
 <html>
-    <body style="text-align:center; margin-top:50px; font-family: Arial;">
+    <body style="text-align:center; margin-top:30px; font-family: Arial;">
         
+        <h2 id="customerName" style="color: darkblue;">Welcome, Guest!</h2>
+        <p id="rewardPoints" style="color: orange; font-weight: bold; font-size: 18px;">⭐ Reward Points: 0</p>
+        <hr>
+
         <h1>🛒 The Supermarket App</h1>
 
         <input type="text" id="foodName" placeholder="Enter a Food Item">
@@ -9,91 +13,95 @@
         <button onclick="emptyCart()" style="background-color: pink;">Empty Cart 🗑️</button>
         
         <p id="counterDisplay">Total Items: 0</p>
-        <p id="billDisplay">Your Bill: $0</p>
-        <p id="message" style="font-size: 20px; font-weight: bold;"></p>
         
+        <h3 id="billDisplay" style="color: green;">Your Bill: $0</h3>
+        <input type="text" id="promoCode" placeholder="Enter Coupon Code">
+        <button onclick="applyPromo()" style="background-color: violet;">Apply Coupon</button>
+        <p id="promoMessage"></p>
+        
+        <p id="message" style="font-size: 20px; font-weight: bold;"></p>
         <hr>
 
-        <h2>🔍 Search in Cart</h2>
+        <h2>🔍 Search in Godown</h2>
         <input type="text" id="searchBox" placeholder="Search Item...">
         <button onclick="searchItem()">Search</button>
         <p id="searchResult"></p>
-        
         <hr>
 
         <h2>🛒 Fresh Fruits Available</h2>
-        
         <p>
             <img src="https://cdn-icons-png.flaticon.com/128/415/415733.png" width="40" style="vertical-align: middle;"> 
-            <b>Apple</b> 
+            <b>Apple ($10)</b> 
             <button onclick="buyFruit('Apple')" style="background-color: lightblue;">Add to Cart</button>
         </p>
-        
         <p>
             <img src="https://cdn-icons-png.flaticon.com/128/2909/2909761.png" width="40" style="vertical-align: middle;"> 
-            <b>Banana</b> 
+            <b>Banana ($5)</b> 
             <button onclick="buyFruit('Banana')" style="background-color: lightblue;">Add to Cart</button>
         </p>
-        
         <p>
             <img src="https://cdn-icons-png.flaticon.com/128/6866/6866538.png" width="40" style="vertical-align: middle;"> 
-            <b>Mango</b> 
+            <b>Mango ($15)</b> 
             <button onclick="buyFruit('Mango')" style="background-color: lightblue;">Add to Cart</button>
         </p>
-
         <p>
             <img src="https://img.icons8.com/color/48/000000/grapes.png" width="40" style="vertical-align: middle;"> 
-            <b>Grapes</b> 
+            <b>Grapes ($12)</b> 
             <button onclick="buyFruit('Grapes')" style="background-color: lightblue;">Add to Cart</button>
         </p>
-
         <p>
             <img src="https://img.icons8.com/color/48/000000/strawberry.png" width="40" style="vertical-align: middle;"> 
-            <b>Strawberry</b> 
+            <b>Strawberry ($20)</b> 
             <button onclick="buyFruit('Strawberry')" style="background-color: lightblue;">Add to Cart</button>
         </p>
-
         <p>
             <img src="https://img.icons8.com/color/48/000000/watermelon.png" width="40" style="vertical-align: middle;"> 
-            <b>Watermelon</b> 
+            <b>Watermelon ($25)</b> 
             <button onclick="buyFruit('Watermelon')" style="background-color: lightblue;">Add to Cart</button>
         </p>
         
         <script>
-            // 1. Hamara Godaam ab bilkul khali hai!
+            // --- LESSON 17: OBJECTS ---
+            let customer = {
+                name: "Ruby",
+                points: 0
+            };
+            
+            let priceList = {
+                "Apple": 10,
+                "Banana": 5,
+                "Mango": 15,
+                "Grapes": 12,
+                "Strawberry": 20,
+                "Watermelon": 25
+            };
+
+            // Page shuru hote hi VIP naam lagao
+            document.getElementById("customerName").innerText = "Welcome, VIP " + customer.name + "!";
+            // ---------------------------
+
             let food = [];
             
-            // FUNCTION 1: Naya item add karna (Type karke)
             function foodItems() {
                 let newFood = document.getElementById("foodName").value;
                 document.getElementById("foodName").value = "";
-                
-                if (newFood) { 
-                    food.push(newFood); 
-                }
-                
-                updateCartUI(); // UI update karne ka common kaam
+                if (newFood) { food.push(newFood); }
+                updateCartUI(); 
             }
 
-            // FUNCTION 2: Aakhiri item hatana (Undo)
             function undoItem() {
-                food.pop(); // Godaam se aakhiri item nikal do
+                food.pop(); 
                 updateCartUI();
             }
 
-            // FUNCTION 3: Godaam Khali karna
             function emptyCart() {
-                food = []; // Godaam khali
-                document.getElementById("message").innerText = ""; 
-                document.getElementById("counterDisplay").innerText = "Total Items: 0"; 
-                document.getElementById("billDisplay").innerText = "Your Bill: $0"; 
-                document.getElementById("searchResult").innerText = ""; 
+                food = []; 
+                document.getElementById("promoMessage").innerText = ""; // Promo bhi mitao
+                updateCartUI(); 
             }
 
-            // FUNCTION 4: Godaam mein item dhundna
             function searchItem() {
                 let word = document.getElementById("searchBox").value;
-                
                 if (food.includes(word)) {
                     document.getElementById("searchResult").innerText = "Haan! " + word + " godaam mein hai! ✅";
                 } else {
@@ -101,18 +109,63 @@
                 }
             }
 
-            // FUNCTION 5: Direct Button se fruit add karna (Arguments ka jadoo)
             function buyFruit(fruitName) {
-                food.push(fruitName); // Jo fruit name pass hua hai, usko godaam mein daalo
-                updateCartUI(); // UI update karo
+                food.push(fruitName); 
+                updateCartUI(); 
             }
 
-            // HELPER FUNCTION: Bar-bar likhne se bachne ke liye UI update ka ek function
+            // NAYA FUNCTION: Promo Code check karne ke liye
+            function applyPromo() {
+                let code = document.getElementById("promoCode").value;
+                if (code === "RUBY50") {
+                    document.getElementById("promoMessage").innerText = "🎉 Yay! $50 Discount Applied!";
+                    document.getElementById("promoMessage").style.color = "green";
+                    
+                    // Bill calculate karo aur 50 minus karo
+                    let totalBill = calculateBill();
+                    let discountedBill = totalBill - 50;
+                    if (discountedBill < 0) { discountedBill = 0; } // Bill minus mein na jaye
+                    
+                    document.getElementById("billDisplay").innerText = "Your Bill: $" + discountedBill + " (Discounted!)";
+                } else {
+                    document.getElementById("promoMessage").innerText = "❌ Invalid Code!";
+                    document.getElementById("promoMessage").style.color = "red";
+                    updateCartUI(); // Wrong code par purana bill dikhao
+                }
+            }
+
+            // HELPER FUNCTION: Bill ginne ke liye taaki baar baar same code na likhna pade
+            function calculateBill() {
+                let total = 0;
+                for (let i = 0; i < food.length; i++) {
+                    let currentItem = food[i];
+                    
+                    // Agar fruit priceList object mein hai, toh uska price lo
+                    if (priceList[currentItem]) {
+                        total = total + priceList[currentItem];
+                    } else {
+                        total = total + 5; // Agar bahar se kuch naya type kiya toh default $5
+                    }
+                }
+                return total;
+            }
+
+            // MAIN HELPER: Sab kuch update karne wala jadoo
             function updateCartUI() {
                 document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
-                let billAmount = food.length * 5;
-                document.getElementById("billDisplay").innerText = "Your Bill: $" + billAmount;
                 
+                // VIP Points update (Har item par 10 points)
+                customer.points = food.length * 10;
+                document.getElementById("rewardPoints").innerText = "⭐ Reward Points: " + customer.points;
+
+                // Bill update using Calculate function
+                let finalBill = calculateBill();
+                document.getElementById("billDisplay").innerText = "Your Bill: $" + finalBill;
+                
+                // Promo code reset
+                document.getElementById("promoMessage").innerText = "";
+                
+                // Loop chalakar list sajana
                 let text = "";
                 for (let i = 0; i < food.length; i++) {
                     text = text + food[i] + " ";
