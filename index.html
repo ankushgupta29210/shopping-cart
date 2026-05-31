@@ -1,39 +1,25 @@
-<html>
-<body style="text-align:center; margin-top:100px;"> 
+// 1. State Management: Using 'const' because the array reference shouldn't change (even though we mutate its contents)
+const shoppingCart = [];
+
+// 2. DOM Caching: Storing elements in variables so the browser doesn't have to search for them every time we click
+const inputElement = document.getElementById("myInput");
+const displayElement = document.getElementById("message");
+
+// 3. Arrow Function: Modern ES6 syntax for writing functions
+const addItem = () => {
     
-    <h1>Shopping Cart</h1>
-    <br><br>
+    // 4. Data Extraction & Sanitization: Getting the value and removing accidental extra spaces using .trim()
+    const newItem = inputElement.value.trim();
 
-    <input type="text" id="foodName" placeholder="Please Enter a Food Item"> 
-    <button onclick="foodItems()">Add Food</button>
+    // 5. Guard Clause (Error Handling): If the user clicked 'Add' without typing anything, stop the function immediately
+    if (!newItem) return;
 
-    <p id="message"></p>
+    // 6. UI Reset: Clear the input box
+    inputElement.value = "";
 
-    <script>
-        let food = ["Rice", "Daal"];
+    // 7. State Mutation: Add the sanitized item to our cart array
+    shoppingCart.push(newItem);
 
-        function foodItems() {
-            // 1. Pehle input box se value nikalo
-            let newFood = document.getElementById("foodName").value;
-
-            // 2. Phir input box ko khaali (clear) karo
-            document.getElementById("foodName").value = "";
-
-            // 3. Naye item ko array mein push karo
-            food.push(newFood);
-
-            // 4. Loop ke liye ek khaali string banao (Yeh Ruby bhool gayi thi)
-            let text = "";
-
-            // 5. Loop chalao
-            for (let i = 0; i < food.length; i++) {
-                text = text + food[i] + " ";
-            }
-
-            // 6. Array (food) nahi, string (text) ko screen par print karo
-            document.getElementById("message").innerText = text;
-        } // <-- Yeh bracket missing tha!
-    </script>
-
-</body>
-</html>
+    // 8. Functional Rendering: Instead of a 3-line 'for loop', we use the built-in .join() method to combine the array into a string instantly
+    displayElement.textContent = shoppingCart.join(" ");
+};
