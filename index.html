@@ -1,48 +1,84 @@
 <html>
-    <body style="text-align:center; margin-top:100px;">
+    <body style="text-align:center; margin-top:50px; font-family: Arial;">
         
-        <h1>🛒 Shopping Cart</h1>
+        <h1>🛒 The Supermarket App</h1>
 
-        <input type="text" id="foodName" placeholder="Please Enter a Food Item">
+        <input type="text" id="foodName" placeholder="Enter a Food Item">
+        <button onclick="foodItems()" style="background-color: lightgreen;">Add Food</button>
+        <button onclick="undoItem()" style="background-color: yellow;">Undo Last Item ↩️</button>
+        <button onclick="emptyCart()" style="background-color: pink;">Empty Cart 🗑️</button>
         
-        <button onclick="foodItems()">Add Food</button>
-        <button onclick="emptyCart()" style="color: red;">Empty Cart</button>
+        <p id="counterDisplay">Total Items: 0</p>
+        <p id="billDisplay">Your Bill: $0</p>
+        <p id="message" style="font-size: 20px; font-weight: bold;"></p>
         
-        <p id="counterDisplay"></p>
-        <p id="message"></p>
+        <hr> <h2>🔍 Search in Godown</h2>
+        <input type="text" id="searchBox" placeholder="Search Item...">
+        <button onclick="searchItem()">Search</button>
+        <p id="searchResult"></p>
         
         <script>
-            // 1. Hamara Godaam (Array)
+            // 1. Hamara Godaam ab bilkul khali hai!
             let food = [];
             
-            // 2. Naya Item Add karne ka function
+            // FUNCTION 1: Naya item add karna
             function foodItems() {
                 let newFood = document.getElementById("foodName").value;
                 document.getElementById("foodName").value = "";
                 
-                // Agar input khali nahi hai, tabhi godaam mein daalo
                 if (newFood) { 
                     food.push(newFood); 
                 }
                 
-                // Total Count Update (if-block ke bahar, taaki hamesha chale)
+                // Counter aur Bill Update (Har item $5 ka hai)
                 document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
+                let billAmount = food.length * 5;
+                document.getElementById("billDisplay").innerText = "Your Bill: $" + billAmount;
                 
                 // Loop chalakar list sajana
                 let text = "";
                 for (let i = 0; i < food.length; i++) {
                     text = text + food[i] + " ";
                 }
-                
-                // Saji hui list screen par dikhana
                 document.getElementById("message").innerText = text;
             }
 
-            // 3. Godaam Khali karne ka function (Danger Zone!)
+            // FUNCTION 2: Aakhiri item hatana (Undo)
+            function undoItem() {
+                food.pop(); // Godaam se aakhiri item nikal do
+                
+                // Item hatne ke baad Counter aur Bill wapas update karo
+                document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
+                let billAmount = food.length * 5;
+                document.getElementById("billDisplay").innerText = "Your Bill: $" + billAmount;
+                
+                // List ko wapas naye tareeqe se sajakar dikhao
+                let text = "";
+                for (let i = 0; i < food.length; i++) {
+                    text = text + food[i] + " ";
+                }
+                document.getElementById("message").innerText = text;
+            }
+
+            // FUNCTION 3: Godaam Khali karna
             function emptyCart() {
-                food = []; // Godaam ko khali dabba bana diya
-                document.getElementById("message").innerText = ""; // Screen se list mita di
-                document.getElementById("counterDisplay").innerText = "Total Items: 0"; // Counter ko zero kar diya
+                food = []; // Godaam khali
+                document.getElementById("message").innerText = ""; 
+                document.getElementById("counterDisplay").innerText = "Total Items: 0"; 
+                document.getElementById("billDisplay").innerText = "Your Bill: $0"; 
+                document.getElementById("searchResult").innerText = ""; // Search result bhi mita do
+            }
+
+            // FUNCTION 4: Godaam mein item dhundna
+            function searchItem() {
+                let word = document.getElementById("searchBox").value;
+                
+                // Agar word mila, toh Haan bolo, nahi toh Naa.
+                if (food.includes(word)) {
+                    document.getElementById("searchResult").innerText = "Haan! " + word + " godaam mein hai! ✅";
+                } else {
+                    document.getElementById("searchResult").innerText = "Nahi! " + word + " nahi mila. ❌";
+                }
             }
             
         </script>
