@@ -1,0 +1,39 @@
+<html>
+<body style="text-align:center; margin-top:100px;"> 
+    
+    <h1>Shopping Cart</h1>
+    <br><br>
+
+    <input type="text" id="foodName" placeholder="Please Enter a Food Item"> 
+    <button onclick="foodItems()">Add Food</button>
+
+    <p id="message"></p>
+
+    <script>
+        let food = ["Rice", "Daal"];
+
+        function foodItems() {
+            // 1. Pehle input box se value nikalo
+            let newFood = document.getElementById("foodName").value;
+
+            // 2. Phir input box ko khaali (clear) karo
+            document.getElementById("foodName").value = "";
+
+            // 3. Naye item ko array mein push karo
+            food.push(newFood);
+
+            // 4. Loop ke liye ek khaali string banao (Yeh Ruby bhool gayi thi)
+            let text = "";
+
+            // 5. Loop chalao
+            for (let i = 0; i < food.length; i++) {
+                text = text + food[i] + " ";
+            }
+
+            // 6. Array (food) nahi, string (text) ko screen par print karo
+            document.getElementById("message").innerText = text;
+        } // <-- Yeh bracket missing tha!
+    </script>
+
+</body>
+</html>
