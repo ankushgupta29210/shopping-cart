@@ -1,178 +1,96 @@
 <html>
-    <body style="text-align:center; margin-top:30px; font-family: Arial;">
-        
-        <h2 id="customerName" style="color: darkblue;">Welcome, Guest!</h2>
-        <p id="rewardPoints" style="color: orange; font-weight: bold; font-size: 18px;">⭐ Reward Points: 0</p>
+    <body style="text-align:center; margin-top:50px;">
+
+        <button onclick="darkMode()">Dark Mode</button>
+        <br><br>
+
+        <h1>Ruby's Smart Café Manager</h1>
+
+        <h3 id="counterDisplay">Total Menu Items: 0</h3>
+
+        <p id="errorMessage" style="color:red;"></p>
+
+        <input type="text" id="itemBox" placeholder="Enter Food or Drink">
+        <button onclick="addItem()">Add Item</button>
+        <br><br>
+
+        <button onclick="undoLast()">Undo Last Item</button>
+        <br><br>
         <hr>
 
-        <h1>🛒 The Supermarket App</h1>
+        <div id="menuList"></div>
 
-        <input type="text" id="foodName" placeholder="Enter a Food Item">
-        <button onclick="foodItems()" style="background-color: lightgreen;">Add Food</button>
-        <button onclick="undoItem()" style="background-color: yellow;">Undo Last Item ↩️</button>
-        <button onclick="emptyCart()" style="background-color: pink;">Empty Cart 🗑️</button>
-        
-        <p id="counterDisplay">Total Items: 0</p>
-        
-        <h3 id="billDisplay" style="color: green;">Your Bill: $0</h3>
-        <input type="text" id="promoCode" placeholder="Enter Coupon Code">
-        <button onclick="applyPromo()" style="background-color: violet;">Apply Coupon</button>
-        <p id="promoMessage"></p>
-        
-        <p id="message" style="font-size: 20px; font-weight: bold;"></p>
-        <hr>
-
-        <h2>🔍 Search in Godown</h2>
-        <input type="text" id="searchBox" placeholder="Search Item...">
-        <button onclick="searchItem()">Search</button>
-        <p id="searchResult"></p>
-        <hr>
-
-        <h2>🛒 Fresh Fruits Available</h2>
-        <p>
-            <img src="https://cdn-icons-png.flaticon.com/128/415/415733.png" width="40" style="vertical-align: middle;"> 
-            <b>Apple ($10)</b> 
-            <button onclick="buyFruit('Apple')" style="background-color: lightblue;">Add to Cart</button>
-        </p>
-        <p>
-            <img src="https://cdn-icons-png.flaticon.com/128/2909/2909761.png" width="40" style="vertical-align: middle;"> 
-            <b>Banana ($5)</b> 
-            <button onclick="buyFruit('Banana')" style="background-color: lightblue;">Add to Cart</button>
-        </p>
-        <p>
-            <img src="https://cdn-icons-png.flaticon.com/128/6866/6866538.png" width="40" style="vertical-align: middle;"> 
-            <b>Mango ($15)</b> 
-            <button onclick="buyFruit('Mango')" style="background-color: lightblue;">Add to Cart</button>
-        </p>
-        <p>
-            <img src="https://img.icons8.com/color/48/000000/grapes.png" width="40" style="vertical-align: middle;"> 
-            <b>Grapes ($12)</b> 
-            <button onclick="buyFruit('Grapes')" style="background-color: lightblue;">Add to Cart</button>
-        </p>
-        <p>
-            <img src="https://img.icons8.com/color/48/000000/strawberry.png" width="40" style="vertical-align: middle;"> 
-            <b>Strawberry ($20)</b> 
-            <button onclick="buyFruit('Strawberry')" style="background-color: lightblue;">Add to Cart</button>
-        </p>
-        <p>
-            <img src="https://img.icons8.com/color/48/000000/watermelon.png" width="40" style="vertical-align: middle;"> 
-            <b>Watermelon ($25)</b> 
-            <button onclick="buyFruit('Watermelon')" style="background-color: lightblue;">Add to Cart</button>
-        </p>
-        
         <script>
-            // --- LESSON 17: OBJECTS ---
-            let customer = {
-                name: "Ruby",
-                points: 0
-            };
-            
-            let priceList = {
-                "Apple": 10,
-                "Banana": 5,
-                "Mango": 15,
-                "Grapes": 12,
-                "Strawberry": 20,
-                "Watermelon": 25
-            };
+            // 2. The Array to store all items
+            let menuItems = [];
 
-            // Page shuru hote hi VIP naam lagao
-            document.getElementById("customerName").innerText = "Welcome, VIP " + customer.name + "!";
-            // ---------------------------
-
-            let food = [];
-            
-            function foodItems() {
-                let newFood = document.getElementById("foodName").value;
-                document.getElementById("foodName").value = "";
-                if (newFood) { food.push(newFood); }
-                updateCartUI(); 
-            }
-
-            function undoItem() {
-                food.pop(); 
-                updateCartUI();
-            }
-
-            function emptyCart() {
-                food = []; 
-                document.getElementById("promoMessage").innerText = ""; // Promo bhi mitao
-                updateCartUI(); 
-            }
-
-            function searchItem() {
-                let word = document.getElementById("searchBox").value;
-                if (food.includes(word)) {
-                    document.getElementById("searchResult").innerText = "Haan! " + word + " godaam mein hai! ✅";
-                } else {
-                    document.getElementById("searchResult").innerText = "Nahi! " + word + " nahi mila. ❌";
-                }
-            }
-
-            function buyFruit(fruitName) {
-                food.push(fruitName); 
-                updateCartUI(); 
-            }
-
-            // NAYA FUNCTION: Promo Code check karne ke liye
-            function applyPromo() {
-                let code = document.getElementById("promoCode").value;
-                if (code === "RUBY50") {
-                    document.getElementById("promoMessage").innerText = "🎉 Yay! $50 Discount Applied!";
-                    document.getElementById("promoMessage").style.color = "green";
-                    
-                    // Bill calculate karo aur 50 minus karo
-                    let totalBill = calculateBill();
-                    let discountedBill = totalBill - 50;
-                    if (discountedBill < 0) { discountedBill = 0; } // Bill minus mein na jaye
-                    
-                    document.getElementById("billDisplay").innerText = "Your Bill: $" + discountedBill + " (Discounted!)";
-                } else {
-                    document.getElementById("promoMessage").innerText = "❌ Invalid Code!";
-                    document.getElementById("promoMessage").style.color = "red";
-                    updateCartUI(); // Wrong code par purana bill dikhao
-                }
-            }
-
-            // HELPER FUNCTION: Bill ginne ke liye taaki baar baar same code na likhna pade
-            function calculateBill() {
-                let total = 0;
-                for (let i = 0; i < food.length; i++) {
-                    let currentItem = food[i];
-                    
-                    // Agar fruit priceList object mein hai, toh uska price lo
-                    if (priceList[currentItem]) {
-                        total = total + priceList[currentItem];
-                    } else {
-                        total = total + 5; // Agar bahar se kuch naya type kiya toh default $5
-                    }
-                }
-                return total;
-            }
-
-            // MAIN HELPER: Sab kuch update karne wala jadoo
-            function updateCartUI() {
-                document.getElementById("counterDisplay").innerText = "Total Items: " + food.length;  
+            // The Reusable Function to update the screen
+            function updateScreen() {
                 
-                // VIP Points update (Har item par 10 points)
-                customer.points = food.length * 10;
-                document.getElementById("rewardPoints").innerText = "⭐ Reward Points: " + customer.points;
+                // Update the live counter
+                document.getElementById("counterDisplay").innerText = "Total Menu Items: " + menuItems.length;
 
-                // Bill update using Calculate function
-                let finalBill = calculateBill();
-                document.getElementById("billDisplay").innerText = "Your Bill: $" + finalBill;
-                
-                // Promo code reset
-                document.getElementById("promoMessage").innerText = "";
-                
-                // Loop chalakar list sajana
+                // Clear any old error messages
+                document.getElementById("errorMessage").innerText = "";
+
+                // Loop through the array and build the list with Delete buttons
                 let text = "";
-                for (let i = 0; i < food.length; i++) {
-                    text = text + food[i] + " ";
+                for (let i = 0; i < menuItems.length; i++) {
+                    
+                    // 4. Specific Delete Button (Splice) using the index 'i'
+                    text = text + menuItems[i] + " <button onclick='deleteSpecific(" + i + ")'>Delete</button><br><br>";
                 }
-                document.getElementById("message").innerText = text;
+                
+                // Push the final built text to the screen using innerHTML
+                document.getElementById("menuList").innerHTML = text;
             }
-            
+
+            function addItem() {
+                // Grab the text from the box
+                let newItem = document.getElementById("itemBox").value;
+
+                // Check if the input is empty
+                if (newItem == "") {
+                    document.getElementById("errorMessage").innerText = "Error: Please enter an item first!";
+                } else {
+                    // Add to array
+                    menuItems.push(newItem);
+                    
+                    // 6. Auto-Clear the input box
+                    document.getElementById("itemBox").value = "";
+                    
+                    // Refresh the screen
+                    updateScreen();
+                }
+            }
+
+            function undoLast() {
+                // Check if the array is already empty
+                if (menuItems.length == 0) {
+                    document.getElementById("errorMessage").innerText = "Error: Nothing to undo!";
+                } else {
+                    // Remove the very last item
+                    menuItems.pop();
+                    
+                    // Refresh the screen
+                    updateScreen();
+                }
+            }
+
+            function deleteSpecific(index) {
+                // Remove exactly 1 item starting at the specific index position
+                menuItems.splice(index, 1);
+                
+                // Refresh the screen
+                updateScreen();
+            }
+
+            function darkMode() {
+                // Change CSS to dark mode
+                document.body.style.backgroundColor = "black";
+                document.body.style.color = "white";
+            }
+
         </script>
     </body>
 </html>
